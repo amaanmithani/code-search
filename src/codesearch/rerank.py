@@ -38,7 +38,7 @@ class OverlapReranker:
 
 class OnnxCrossEncoder:  # pragma: no cover - needs the downloaded model
     def __init__(
-        self, model_id: str = RERANK_MODEL, max_length: int = 384, batch_size: int = 16
+        self, model_id: str = RERANK_MODEL, max_length: int = 256, batch_size: int = 16
     ) -> None:
         import onnxruntime as ort
         from huggingface_hub import hf_hub_download

@@ -35,7 +35,7 @@ class Searcher:
         embedder: Embedder | None = None,
         reranker: Reranker | None = None,
         candidates: int = 100,
-        rerank_depth: int = 50,
+        rerank_depth: int = 20,
         rrf_k: int = 60,
     ) -> None:
         self.chunks = chunks
@@ -48,6 +48,7 @@ class Searcher:
         self.rerank_depth = rerank_depth
         self.rrf_k = rrf_k
         self._query_cache: dict[str, Matrix] = {}
+        self._position = {c: i for i, c in enumerate(chunks)}
 
     @classmethod
     def from_index(
@@ -67,6 +68,10 @@ class Searcher:
         if embedder is not None and stored != embedder.name:
             raise ValueError(f"index was embedded with {stored!r}, not {embedder.name!r}")
         return cls(chunks, vectors, embedder, reranker)
+
+    def document_for(self, chunk: Chunk) -> str:
+        """The indexed text (header + code) of ``chunk``."""
+        return self.docs[self._position[chunk]]
 
     def precompute_queries(self, queries: list[str]) -> None:
         """Batch-embed queries up front (evaluation); ``search`` then reuses them."""
