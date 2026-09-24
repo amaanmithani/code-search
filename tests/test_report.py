@@ -35,13 +35,29 @@ def _fake_report() -> dict[str, object]:
             }
         ],
         "results": {"bm25": {"overall": s, "per_repo": {"fx": s}}},
-        "query_embedding_latency_ms": {"p50": 12.0, "n": 3},
+        "paired_comparisons": {
+            "hybrid vs bm25": {
+                "mrr@10_diff": 0.05,
+                "ci95": [0.01, 0.09],
+                "a_better": 7,
+                "b_better": 2,
+            }
+        },
+        "model_latency_ms": {
+            "query_embedding_p50": 12.0,
+            "rerank_call_p50": 99.0,
+            "rerank_candidates_per_call": 20,
+            "n": 3,
+            "uncached_rerank_pairs_in_timed_loop": 0,
+        },
     }
 
 
 def test_render_and_update() -> None:
     block = report.render(_fake_report())
-    assert "| `bm25` | 3 |" in block and "**fx** @ `v1`" in block and "12 ms" in block
+    assert "| `bm25` | 3 |" in block and "**fx** @ `v1`" in block and "p50 12 ms" in block
+    assert "on-disk cache" in block
+    assert "| hybrid vs bm25 | +0.050 | [+0.010, +0.090] | 7 / 2 |" in block
     readme = f"intro\n{report.START}\nold\n{report.END}\ntail\n"
     new = report.update_readme(readme, block)
     assert "old" not in new and new.startswith("intro") and new.endswith("tail\n")

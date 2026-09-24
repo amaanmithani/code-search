@@ -59,13 +59,44 @@ def render(report: dict[str, Any]) -> str:
             "",
             *_table({m: r["per_repo"][name] for m, r in results.items()}, "mode"),
         ]
-    emb = report.get("query_embedding_latency_ms") or {}
-    if emb.get("p50") is not None:
+    comparisons = report.get("paired_comparisons") or {}
+    if comparisons:
         out += [
             "",
-            f"Latency is retrieval-only with the query vector precomputed; one query "
-            f"embedding call to local Ollama added a further p50 of {emb['p50']:.0f} ms "
-            f"(n={emb['n']}, measured on a shared machine).",
+            "**Paired differences in MRR@10** (same queries, paired bootstrap 95% CI; "
+            "wins/losses count queries where one mode ranked the target strictly higher)",
+            "",
+            "| comparison | ΔMRR@10 | 95% CI | wins / losses |",
+            "|---|---:|---:|---:|",
+        ]
+        for name, c in comparisons.items():
+            lo, hi = c["ci95"]
+            out.append(
+                f"| {name} | {c['mrr@10_diff']:+.3f} | [{lo:+.3f}, {hi:+.3f}] | "
+                f"{c['a_better']} / {c['b_better']} |"
+            )
+    model = report.get("model_latency_ms") or {}
+    if model.get("query_embedding_p50") is not None:
+        rerank = model.get("rerank_call_p50")
+        rerank_txt = (
+            f" and one uncached cross-encoder call over {model['rerank_candidates_per_call']} "
+            f"candidates took p50 {rerank:.0f} ms"
+            if rerank is not None
+            else ""
+        )
+        warm = (
+            "Latency above is retrieval only: query embeddings are batched up front and "
+            "every cross-encoder score came from the on-disk cache of an earlier run."
+            if model.get("uncached_rerank_pairs_in_timed_loop") == 0
+            else "Latency above excludes query embedding (batched up front) but includes "
+            "cross-encoder calls."
+        )
+        out += [
+            "",
+            f"{warm} Measured separately (n={model['n']}), one uncached query embedding took "
+            f"p50 {model['query_embedding_p50']:.0f} ms{rerank_txt}. These were measured on "
+            f"a heavily loaded, swapping laptop with a shared Ollama server, so treat them "
+            f"as upper bounds.",
         ]
     return "\n".join(out)
 

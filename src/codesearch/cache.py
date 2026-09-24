@@ -50,6 +50,7 @@ class CachedReranker:
     def __init__(self, inner: Reranker, cache: KVCache) -> None:
         self.inner = inner
         self.cache = cache
+        self.misses = 0  # documents that needed a real model call
 
     @property
     def name(self) -> str:
@@ -60,6 +61,7 @@ class CachedReranker:
         hit = self.cache.get_many(keys)
         missing = [i for i, k in enumerate(keys) if k not in hit]
         if missing:
+            self.misses += len(missing)
             fresh = self.inner.score(query, [documents[i] for i in missing])
             new = {keys[i]: struct.pack("<d", s) for i, s in zip(missing, fresh, strict=True)}
             self.cache.put_many(new)

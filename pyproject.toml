@@ -44,7 +44,7 @@ python_version = "3.12"
 strict = true
 files = ["src", "scripts"]
 [[tool.mypy.overrides]]
-module = ["tree_sitter_python", "tree_sitter_go", "tree_sitter_typescript", "onnxruntime", "tokenizers", "huggingface_hub"]
+module = ["uvicorn", "tree_sitter_python", "tree_sitter_go", "tree_sitter_typescript", "onnxruntime", "tokenizers", "huggingface_hub"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]

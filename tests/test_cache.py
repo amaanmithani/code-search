@@ -37,6 +37,7 @@ def test_cached_reranker_persists_across_instances(tmp_path: Path) -> None:
     r2 = CachedReranker(inner, KVCache(tmp_path / "c.sqlite"))
     again = r2.score("read config", ["def read_config(): ...", "def other(): ...", "config"])
     assert again[:2] == first and inner.pairs == 3  # only the new document was scored
+    assert r2.misses == 1
 
 
 def test_cached_query_embedder(tmp_path: Path) -> None:

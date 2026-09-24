@@ -33,3 +33,15 @@ def test_summarize() -> None:
     assert s["latency_ms"]["p50"] == 2.5  # type: ignore[index]
     empty = summarize([], [])
     assert math.isnan(empty["latency_ms"]["p50"])  # type: ignore[index]
+
+
+def test_paired_difference() -> None:
+    from codesearch.metrics import paired_difference
+
+    d = paired_difference([1, 1, 2, None], [2, None, 2, 1], n_resamples=100)
+    assert d["mrr@10_diff"] == pytest.approx((0.5 + 1 + 0 - 1) / 4)
+    assert d["a_better"] == 2 and d["b_better"] == 1
+    lo, hi = d["ci95"]  # type: ignore[misc]
+    assert lo <= d["mrr@10_diff"] <= hi  # type: ignore[operator]
+    with pytest.raises(ValueError):
+        paired_difference([1], [])

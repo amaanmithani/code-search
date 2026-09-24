@@ -32,7 +32,7 @@ from codesearch.benchmark import (
 from codesearch.cache import CachedQueryEmbedder, CachedReranker, KVCache
 from codesearch.embeddings import Embedder
 from codesearch.index import IndexStore, index_repository
-from codesearch.metrics import summarize
+from codesearch.metrics import paired_difference, summarize
 from codesearch.rerank import Reranker
 from codesearch.search import MODES, Mode, Searcher
 
@@ -71,6 +71,7 @@ def run_eval(
     examples: list[dict[str, object]] = []
     embed_lats: list[float] = []
     rerank_lats: list[float] = []
+    timed_misses = 0
 
     for spec in repos:
         root = ensure_repo(spec, data_dir / "repos")
@@ -117,6 +118,7 @@ def run_eval(
                 reranker.score(pair.query, docs)
                 rerank_lats.append((time.perf_counter() - t0) * 1000)
 
+        misses_before = c_reranker.misses if c_reranker is not None else 0
         for mode in modes:
             r_list: list[int | None] = []
             l_list: list[float] = []
@@ -143,6 +145,8 @@ def run_eval(
                 ex["rank"][mode] = r_list[j]  # type: ignore[index]
             s = summarize(r_list, l_list, n_resamples=200)
             log(f"  {mode:<14} mrr@10={s['mrr@10']['mean']:.3f}")  # type: ignore[index]
+        if c_reranker is not None:
+            timed_misses += c_reranker.misses - misses_before
     cache.close()
 
     results: dict[str, object] = {}
@@ -156,6 +160,17 @@ def run_eval(
                 for name in ranks[mode]
             },
         }
+    comparisons: dict[str, object] = {}
+    for a, b in (
+        ("hybrid", "bm25"),
+        ("hybrid", "dense"),
+        ("dense", "bm25"),
+        ("hybrid+rerank", "hybrid"),
+    ):
+        if a in ranks and b in ranks:
+            ra = [r for name in ranks[a] for r in ranks[a][name]]
+            rb = [r for name in ranks[b] for r in ranks[b][name]]
+            comparisons[f"{a} vs {b}"] = paired_difference(ra, rb, n_resamples=n_resamples)
     report: dict[str, object] = {
         "generated_at": datetime.now(UTC).isoformat(timespec="seconds"),
         "config": {
@@ -179,10 +194,12 @@ def run_eval(
         },
         "repos": repo_info,
         "results": results,
+        "paired_comparisons": comparisons,
         "model_latency_ms": {
             "query_embedding_p50": _p50(embed_lats),
             "rerank_call_p50": _p50(rerank_lats),
             "rerank_candidates_per_call": rerank_depth,
+            "uncached_rerank_pairs_in_timed_loop": timed_misses,
             "n": len(embed_lats),
         },
         "examples": examples,

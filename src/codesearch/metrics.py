@@ -54,3 +54,22 @@ def summarize(
         "p95": float(np.percentile(lat, 95)) if lat.size else float("nan"),
     }
     return out
+
+
+def paired_difference(
+    ranks_a: Sequence[int | None],
+    ranks_b: Sequence[int | None],
+    n_resamples: int = 2000,
+    seed: int = 0,
+) -> dict[str, object]:
+    """MRR@10 of A minus B on the same queries, with a paired bootstrap 95% CI."""
+    if len(ranks_a) != len(ranks_b):
+        raise ValueError("paired comparison needs the same queries")
+    diffs = [reciprocal_rank(a) - reciprocal_rank(b) for a, b in zip(ranks_a, ranks_b, strict=True)]
+    lo, hi = bootstrap_ci(diffs, n_resamples=n_resamples, seed=seed)
+    return {
+        "mrr@10_diff": float(np.mean(diffs)) if diffs else float("nan"),
+        "ci95": [lo, hi],
+        "a_better": sum(d > 0 for d in diffs),
+        "b_better": sum(d < 0 for d in diffs),
+    }

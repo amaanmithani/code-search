@@ -1,0 +1,600 @@
+{
+  "generated_at": "2026-09-24T08:40:50+00:00",
+  "config": {
+    "embedder": "ollama/nomic-embed-text",
+    "reranker": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+    "k": 10,
+    "bm25": {
+      "k1": 1.2,
+      "b": 0.75
+    },
+    "rrf_k": 60,
+    "candidates_per_retriever": 100,
+    "rerank_depth": 20,
+    "min_docstring_words": 8,
+    "min_query_words": 3,
+    "bootstrap": {
+      "resamples": 2000,
+      "ci": 0.95,
+      "unit": "query"
+    },
+    "latency_note": "latency_ms is wall-clock retrieval time per query with model outputs (query embedding, cross-encoder scores) already computed and cached: BM25 + vector search + fusion + cache lookups. Uncached model cost is in model_latency_ms.",
+    "machine": "Darwin arm64 / Python 3.12.13",
+    "limit": null
+  },
+  "repos": [
+    {
+      "name": "requests",
+      "url": "https://github.com/psf/requests",
+      "ref": "v2.32.3",
+      "commit": "0e322af87745eff34caffe4df68456ebc20d9068",
+      "chunks": 701,
+      "queries": 164,
+      "candidate_pairs": 190,
+      "dropped_duplicate_query": 26,
+      "dropped_verbatim_in_index": 0
+    },
+    {
+      "name": "click",
+      "url": "https://github.com/pallets/click",
+      "ref": "8.1.7",
+      "commit": "874ca2bc1c30d93a4ac6e36a15ed685eafe89097",
+      "chunks": 1031,
+      "queries": 193,
+      "candidate_pairs": 205,
+      "dropped_duplicate_query": 12,
+      "dropped_verbatim_in_index": 0
+    }
+  ],
+  "results": {
+    "bm25": {
+      "overall": {
+        "n_queries": 357,
+        "mrr@10": {
+          "mean": 0.4283179938642124,
+          "ci95": [
+            0.38710428615890796,
+            0.4710644813480947
+          ]
+        },
+        "recall@1": {
+          "mean": 0.31092436974789917,
+          "ci95": [
+            0.2661064425770308,
+            0.3585434173669468
+          ]
+        },
+        "recall@5": {
+          "mean": 0.5798319327731093,
+          "ci95": [
+            0.5294117647058824,
+            0.6302521008403361
+          ]
+        },
+        "recall@10": {
+          "mean": 0.6974789915966386,
+          "ci95": [
+            0.6498599439775911,
+            0.7450980392156863
+          ]
+        },
+        "latency_ms": {
+          "p50": 1.065249991370365,
+          "p95": 19.616900605615218
+        }
+      },
+      "per_repo": {
+        "requests": {
+          "n_queries": 164,
+          "mrr@10": {
+            "mean": 0.49234901277584203,
+            "ci95": [
+              0.4305464213124275,
+              0.5563661440185831
+            ]
+          },
+          "recall@1": {
+            "mean": 0.3780487804878049,
+            "ci95": [
+              0.3048780487804878,
+              0.45121951219512196
+            ]
+          },
+          "recall@5": {
+            "mean": 0.6402439024390244,
+            "ci95": [
+              0.5670731707317073,
+              0.7134146341463414
+            ]
+          },
+          "recall@10": {
+            "mean": 0.7439024390243902,
+            "ci95": [
+              0.676829268292683,
+              0.8048780487804879
+            ]
+          },
+          "latency_ms": {
+            "p50": 0.938542012590915,
+            "p95": 16.377783047209956
+          }
+        },
+        "click": {
+          "n_queries": 193,
+          "mrr@10": {
+            "mean": 0.3739082161361954,
+            "ci95": [
+              0.31791286289990955,
+              0.42861856443786495
+            ]
+          },
+          "recall@1": {
+            "mean": 0.2538860103626943,
+            "ci95": [
+              0.19170984455958548,
+              0.3160621761658031
+            ]
+          },
+          "recall@5": {
+            "mean": 0.5284974093264249,
+            "ci95": [
+              0.45595854922279794,
+              0.5958549222797928
+            ]
+          },
+          "recall@10": {
+            "mean": 0.6580310880829016,
+            "ci95": [
+              0.5906735751295337,
+              0.7253886010362695
+            ]
+          },
+          "latency_ms": {
+            "p50": 1.1333749862387776,
+            "p95": 20.93155840411782
+          }
+        }
+      }
+    },
+    "dense": {
+      "overall": {
+        "n_queries": 357,
+        "mrr@10": {
+          "mean": 0.4495086923658351,
+          "ci95": [
+            0.4070177793339558,
+            0.49159674981103546
+          ]
+        },
+        "recall@1": {
+          "mean": 0.33613445378151263,
+          "ci95": [
+            0.28851540616246496,
+            0.38375350140056025
+          ]
+        },
+        "recall@5": {
+          "mean": 0.6050420168067226,
+          "ci95": [
+            0.5573529411764706,
+            0.6526610644257703
+          ]
+        },
+        "recall@10": {
+          "mean": 0.6918767507002801,
+          "ci95": [
+            0.6470588235294118,
+            0.7366946778711485
+          ]
+        },
+        "latency_ms": {
+          "p50": 0.6379589904099703,
+          "p95": 6.790083402302113
+        }
+      },
+      "per_repo": {
+        "requests": {
+          "n_queries": 164,
+          "mrr@10": {
+            "mean": 0.5003000387146729,
+            "ci95": [
+              0.4357785278745645,
+              0.5681089092140922
+            ]
+          },
+          "recall@1": {
+            "mean": 0.3902439024390244,
+            "ci95": [
+              0.3170731707317073,
+              0.4634146341463415
+            ]
+          },
+          "recall@5": {
+            "mean": 0.6524390243902439,
+            "ci95": [
+              0.5792682926829268,
+              0.7195121951219512
+            ]
+          },
+          "recall@10": {
+            "mean": 0.7134146341463414,
+            "ci95": [
+              0.6402439024390244,
+              0.774390243902439
+            ]
+          },
+          "latency_ms": {
+            "p50": 0.514521001605317,
+            "p95": 5.732425111636983
+          }
+        },
+        "click": {
+          "n_queries": 193,
+          "mrr@10": {
+            "mean": 0.4063492063492064,
+            "ci95": [
+              0.34855169010609427,
+              0.4636260177646187
+            ]
+          },
+          "recall@1": {
+            "mean": 0.29015544041450775,
+            "ci95": [
+              0.22797927461139897,
+              0.35233160621761656
+            ]
+          },
+          "recall@5": {
+            "mean": 0.5647668393782384,
+            "ci95": [
+              0.49222797927461137,
+              0.6373056994818653
+            ]
+          },
+          "recall@10": {
+            "mean": 0.6735751295336787,
+            "ci95": [
+              0.6113989637305699,
+              0.7409326424870466
+            ]
+          },
+          "latency_ms": {
+            "p50": 0.7225000008475035,
+            "p95": 11.822341411607333
+          }
+        }
+      }
+    },
+    "hybrid": {
+      "overall": {
+        "n_queries": 357,
+        "mrr@10": {
+          "mean": 0.49382308478947134,
+          "ci95": [
+            0.45210820439286825,
+            0.5360816548841759
+          ]
+        },
+        "recall@1": {
+          "mean": 0.3585434173669468,
+          "ci95": [
+            0.3081232492997199,
+            0.40896358543417366
+          ]
+        },
+        "recall@5": {
+          "mean": 0.6862745098039216,
+          "ci95": [
+            0.6414565826330533,
+            0.7338935574229691
+          ]
+        },
+        "recall@10": {
+          "mean": 0.7450980392156863,
+          "ci95": [
+            0.6974789915966386,
+            0.7899159663865546
+          ]
+        },
+        "latency_ms": {
+          "p50": 2.6786660018842667,
+          "p95": 27.175533008994524
+        }
+      },
+      "per_repo": {
+        "requests": {
+          "n_queries": 164,
+          "mrr@10": {
+            "mean": 0.5516768292682926,
+            "ci95": [
+              0.48937754065040645,
+              0.6152464430894309
+            ]
+          },
+          "recall@1": {
+            "mean": 0.4268292682926829,
+            "ci95": [
+              0.35365853658536583,
+              0.5
+            ]
+          },
+          "recall@5": {
+            "mean": 0.7317073170731707,
+            "ci95": [
+              0.6646341463414634,
+              0.7987804878048781
+            ]
+          },
+          "recall@10": {
+            "mean": 0.774390243902439,
+            "ci95": [
+              0.7073170731707317,
+              0.8292682926829268
+            ]
+          },
+          "latency_ms": {
+            "p50": 2.980792007292621,
+            "p95": 30.438079452142116
+          }
+        },
+        "click": {
+          "n_queries": 193,
+          "mrr@10": {
+            "mean": 0.4446623899991776,
+            "ci95": [
+              0.3890299880746772,
+              0.4999859157825479
+            ]
+          },
+          "recall@1": {
+            "mean": 0.3005181347150259,
+            "ci95": [
+              0.23834196891191708,
+              0.3626943005181347
+            ]
+          },
+          "recall@5": {
+            "mean": 0.6476683937823834,
+            "ci95": [
+              0.5803108808290155,
+              0.7150259067357513
+            ]
+          },
+          "recall@10": {
+            "mean": 0.7202072538860104,
+            "ci95": [
+              0.6580310880829016,
+              0.7823834196891192
+            ]
+          },
+          "latency_ms": {
+            "p50": 2.4862920108716935,
+            "p95": 17.125266796210777
+          }
+        }
+      }
+    },
+    "hybrid+rerank": {
+      "overall": {
+        "n_queries": 357,
+        "mrr@10": {
+          "mean": 0.5249610955493308,
+          "ci95": [
+            0.48151846849851043,
+            0.5657683351118225
+          ]
+        },
+        "recall@1": {
+          "mean": 0.3949579831932773,
+          "ci95": [
+            0.3473389355742297,
+            0.4425770308123249
+          ]
+        },
+        "recall@5": {
+          "mean": 0.7058823529411765,
+          "ci95": [
+            0.6610644257703081,
+            0.7535014005602241
+          ]
+        },
+        "recall@10": {
+          "mean": 0.7843137254901961,
+          "ci95": [
+            0.742296918767507,
+            0.8263305322128851
+          ]
+        },
+        "latency_ms": {
+          "p50": 3.7014159897807986,
+          "p95": 23.5538172069937
+        }
+      },
+      "per_repo": {
+        "requests": {
+          "n_queries": 164,
+          "mrr@10": {
+            "mean": 0.5966318234610918,
+            "ci95": [
+              0.5357488869531554,
+              0.6584331445993031
+            ]
+          },
+          "recall@1": {
+            "mean": 0.4695121951219512,
+            "ci95": [
+              0.39634146341463417,
+              0.5428353658536578
+            ]
+          },
+          "recall@5": {
+            "mean": 0.7560975609756098,
+            "ci95": [
+              0.6890243902439024,
+              0.8172256097560967
+            ]
+          },
+          "recall@10": {
+            "mean": 0.8414634146341463,
+            "ci95": [
+              0.7865853658536586,
+              0.8963414634146342
+            ]
+          },
+          "latency_ms": {
+            "p50": 5.549666995648295,
+            "p95": 30.58705624571301
+          }
+        },
+        "click": {
+          "n_queries": 193,
+          "mrr@10": {
+            "mean": 0.4640595443704252,
+            "ci95": [
+              0.4054106526030101,
+              0.5205864997121473
+            ]
+          },
+          "recall@1": {
+            "mean": 0.3316062176165803,
+            "ci95": [
+              0.26424870466321243,
+              0.39896373056994816
+            ]
+          },
+          "recall@5": {
+            "mean": 0.6632124352331606,
+            "ci95": [
+              0.5958549222797928,
+              0.7305699481865285
+            ]
+          },
+          "recall@10": {
+            "mean": 0.7357512953367875,
+            "ci95": [
+              0.6735751295336787,
+              0.7979274611398963
+            ]
+          },
+          "latency_ms": {
+            "p50": 3.1298329995479435,
+            "p95": 11.512608599150541
+          }
+        }
+      }
+    }
+  },
+  "paired_comparisons": {
+    "hybrid vs bm25": {
+      "mrr@10_diff": 0.065505090925259,
+      "ci95": [
+        0.034766350984838386,
+        0.09501583966920102
+      ],
+      "a_better": 127,
+      "b_better": 41
+    },
+    "hybrid vs dense": {
+      "mrr@10_diff": 0.04431439242363612,
+      "ci95": [
+        0.012436808056555953,
+        0.0747856086879196
+      ],
+      "a_better": 106,
+      "b_better": 59
+    },
+    "dense vs bm25": {
+      "mrr@10_diff": 0.02119069850162287,
+      "ci95": [
+        -0.021371687563914454,
+        0.06391306522609043
+      ],
+      "a_better": 116,
+      "b_better": 95
+    },
+    "hybrid+rerank vs hybrid": {
+      "mrr@10_diff": 0.031138010759859502,
+      "ci95": [
+        -0.006480258770174737,
+        0.06908316104219465
+      ],
+      "a_better": 94,
+      "b_better": 78
+    }
+  },
+  "model_latency_ms": {
+    "query_embedding_p50": 935.9659585024929,
+    "rerank_call_p50": 9525.963208507164,
+    "rerank_candidates_per_call": 20,
+    "uncached_rerank_pairs_in_timed_loop": 0,
+    "n": 10
+  },
+  "examples": [
+    {
+      "repo": "requests",
+      "query": "Given a string object, regardless of type, returns a representation of that string in the native string type, encoding and decoding where necessary.",
+      "target": "src/requests/_internal_utils.py:25 to_native_string",
+      "rank": {
+        "bm25": 1,
+        "dense": 1,
+        "hybrid": 1,
+        "hybrid+rerank": 1
+      }
+    },
+    {
+      "repo": "requests",
+      "query": "Determine if unicode string only contains ASCII characters.",
+      "target": "src/requests/_internal_utils.py:38 unicode_is_ascii",
+      "rank": {
+        "bm25": 1,
+        "dense": 3,
+        "hybrid": 1,
+        "hybrid+rerank": 1
+      }
+    },
+    {
+      "repo": "requests",
+      "query": "Initializes a urllib3 PoolManager.",
+      "target": "src/requests/adapters.py:240 HTTPAdapter.init_poolmanager",
+      "rank": {
+        "bm25": 3,
+        "dense": null,
+        "hybrid": null,
+        "hybrid+rerank": null
+      }
+    },
+    {
+      "repo": "click",
+      "query": "Callback that is used whenever --config is passed.",
+      "target": "examples/aliases/aliases.py:76 read_config",
+      "rank": {
+        "bm25": 9,
+        "dense": 8,
+        "hybrid": 6,
+        "hybrid+rerank": 8
+      }
+    },
+    {
+      "repo": "click",
+      "query": "Adds an alias to the specified configuration file.",
+      "target": "examples/aliases/aliases.py:132 alias",
+      "rank": {
+        "bm25": 1,
+        "dense": 1,
+        "hybrid": 1,
+        "hybrid+rerank": 1
+      }
+    },
+    {
+      "repo": "click",
+      "query": "This script prints some colors.",
+      "target": "examples/colors/colors.py:24 cli",
+      "rank": {
+        "bm25": 3,
+        "dense": 1,
+        "hybrid": 1,
+        "hybrid+rerank": 2
+      }
+    }
+  ]
+}
