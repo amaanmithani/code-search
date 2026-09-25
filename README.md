@@ -27,6 +27,12 @@ $ codesearch query "retry a request when the connection drops" --mode hybrid -k 
 That run used the evaluation index, where docstrings have been replaced by `pass`
 (see below). Snippets are shortened here.
 
+## See it running
+
+![Terminal: indexing psf/requests v2.32.3, an incremental re-index, and two BM25 queries](docs/img/index-and-query-bm25.svg)
+
+*Local run, 2026-09-26, on an unmodified clone of `psf/requests` v2.32.3 (docstrings kept, so this is not the evaluation index). Ollama isn't available on this machine, so the index was built with the test `hashing` embedder and only `--mode bm25` is shown. Dense, hybrid and rerank results need the real embedding model. Output is unedited, weaker hits included.*
+
 ## How it works
 
 ### Chunking (`src/codesearch/chunking.py`)
