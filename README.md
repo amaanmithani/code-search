@@ -1,5 +1,7 @@
 # code-search
 
+> **Credits.** Built by Amaan Mithani with Claude (Anthropic) as the AI coding assistant.
+
 Semantic search over a codebase: **tree-sitter chunking**, **BM25 over split
 identifiers**, **dense retrieval** with a local Ollama embedding model, **hybrid
 fusion** by reciprocal rank, and an optional **cross-encoder rerank**. The
